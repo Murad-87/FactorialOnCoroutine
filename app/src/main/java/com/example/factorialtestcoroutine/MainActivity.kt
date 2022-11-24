@@ -1,10 +1,9 @@
 package com.example.factorialtestcoroutine
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.view.isVisible
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.factorialtestcoroutine.databinding.ActivityMainBinding
 
@@ -28,20 +27,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        viewModel.progress.observe(this) {
-            if (it) {
+        viewModel.state.observe(this) {
+            if (it.isError) {
+                Toast.makeText(
+                    this,
+                    "You did not entered value",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            if (it.isInProgress) {
                 binding.progressBarLoading.visibility = View.VISIBLE
                 binding.buttonCalculate.isEnabled = false
             } else {
                 binding.progressBarLoading.visibility = View.GONE
                 binding.buttonCalculate.isEnabled = true
             }
-        }
-        viewModel.error.observe(this) {
-            Toast.makeText(this, "You did not entered value", Toast.LENGTH_SHORT).show()
-        }
-        viewModel.factorial.observe(this) {
-            binding.textViewFactorial.text = it
+            binding.textViewFactorial.text = it.factorial
         }
     }
 }
